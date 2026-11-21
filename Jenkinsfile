@@ -14,9 +14,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
                     export PATH=$PATH:/usr/local/bin
-                    minikube status || minikube start --driver=docker --force
                     kubectl apply -f k8s-deployment.yaml
+                    pkill -f "port-forward" || true
+                    nohup kubectl port-forward --address 0.0.0.0 service/webapp-service 5000:5000 > /dev/null 2>&1 &
                 '''
             }
         }
