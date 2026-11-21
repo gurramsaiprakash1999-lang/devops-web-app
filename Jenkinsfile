@@ -34,10 +34,10 @@ pipeline {
                     # Target all standard GitHub status contexts to guarantee a green checkmark
                     for CONTEXT in "default" "continuous-integration/jenkins" "continuous-integration/jenkins/branch" "ci/jenkins/build-status"; do
                       curl -X POST \
-                          -H "Authorization: Bearer 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" \
+                          -H "Authorization: Bearer YOUR_ACTUAL_GITHUB_TOKEN" \
                           -H "Accept: application/vnd.github.v3+json" \
                           https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/dc5eebe \
-                          -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Build succeeded", "context": "default"}'
+                          -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Build succeeded", "context": "continuous-integration/jenkins/branch"}'
                     done
                 '''
             }
