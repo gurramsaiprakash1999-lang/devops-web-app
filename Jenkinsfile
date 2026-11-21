@@ -29,11 +29,21 @@ pipeline {
         success {
             withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                 sh '''
+                    COMMIT_HASH=$(git rev-parse HEAD)
+                    
+                    # 1. Update default GitHub status check
                     curl -X POST \
                       -H "Authorization: token $GITHUB_TOKEN" \
                       -H "Accept: application/vnd.github.v3+json" \
-                      https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/$GIT_COMMIT \
-                      -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Build succeeded in Jenkins", "context": "continuous-integration/jenkins"}'
+                      https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/$COMMIT_HASH \
+                      -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Jenkins build succeeded", "context": "default"}'
+
+                    # 2. Update continuous-integration/jenkins status check
+                    curl -X POST \
+                      -H "Authorization: token $GITHUB_TOKEN" \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/$COMMIT_HASH \
+                      -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Jenkins build succeeded", "context": "continuous-integration/jenkins"}'
                 '''
             }
         }
