@@ -25,4 +25,17 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    curl -X POST \
+                      -H "Authorization: token $GITHUB_TOKEN" \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/$GIT_COMMIT \
+                      -d '{"state": "success", "target_url": "http://44.200.158.91:8080", "description": "Build succeeded in Jenkins", "context": "continuous-integration/jenkins"}'
+                '''
+            }
+        }
+    }
 }
