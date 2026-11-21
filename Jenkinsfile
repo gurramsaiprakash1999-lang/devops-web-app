@@ -18,6 +18,7 @@ pipeline {
                     export PATH=$PATH:/usr/local/bin
                     minikube image load webapp:latest
                     kubectl apply -f k8s-deployment.yaml
+                    kubectl rollout restart deployment/webapp-deployment
                     kubectl rollout status deployment/webapp-deployment --timeout=60s
                     pkill -f "port-forward" || true
                     nohup kubectl port-forward --address 0.0.0.0 service/webapp-service 30300:5000 > /dev/null 2>&1 &
@@ -36,7 +37,7 @@ pipeline {
                         -H "Authorization: Bearer $GITHUB_TOKEN" \
                         -H "Accept: application/vnd.github.v3+json" \
                         https://api.github.com/repos/gurramsaiprakash1999-lang/devops-web-app/statuses/$COMMIT_HASH \
-                        -d "{\\"state\\": \\"success\\", \\"target_url\\": \\"http://44.200.158.91:8080\\", \\"description\\": \\"Jenkins Build Succeeded\\", \\"context\\": \\"$CONTEXT\\"}"
+                        -d "{\\"state\\": \\"success\\", \\"target_url\\": \\"http://44.200.158.91:8080\\", \\"description\\": \\"Cloud Hub Application Deployed\\", \\"context\\": \\"$CONTEXT\\"}"
                     done
                 '''
             }
